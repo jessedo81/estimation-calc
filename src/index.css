@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@tarva/ui/styles.css";
+
+/* Custom theme extensions */
+@theme {
+  /* Brand colors for On-Demand Painters */
+  --color-odp-primary: #3b82f6;
+  --color-odp-bg: #0b0f14;
+  --color-odp-surface: #1a1f2e;
+}
+
+/* Base styles */
+body {
+  @apply bg-background text-foreground antialiased;
+  min-height: 100vh;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ring;
+}
