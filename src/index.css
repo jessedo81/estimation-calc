@@ -183,3 +183,114 @@ body {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
+
+/* Print utility classes */
+.print\\:hidden {
+  display: inherit;
+}
+
+.print\\:block {
+  display: none;
+}
+
+/* Print styles */
+@media print {
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:block {
+    display: block !important;
+  }
+  /* Reset colors for print */
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+    --card: #ffffff;
+    --card-foreground: #000000;
+    --muted-foreground: #666666;
+    --primary: #000000;
+    --border: #cccccc;
+  }
+
+  /* Basic print optimizations */
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  /* Hide interactive elements */
+  button,
+  [role="button"],
+  .print\\:hidden,
+  [data-radix-popper-content-wrapper],
+  [data-state="open"],
+  footer {
+    display: none !important;
+  }
+
+  /* Remove backgrounds and shadows */
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep borders on cards */
+  [class*="border"] {
+    border-color: #cccccc !important;
+  }
+
+  /* Ensure cards are visible with borders */
+  [class*="Card"],
+  .rounded-md,
+  .rounded-lg {
+    border: 1px solid #cccccc !important;
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  /* Remove padding from page container */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Header styling for print */
+  header {
+    border-bottom: 2px solid black !important;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Make all text black */
+  h1, h2, h3, h4, h5, h6, p, span, label {
+    color: black !important;
+  }
+
+  /* Muted text slightly lighter */
+  .text-muted-foreground {
+    color: #666666 !important;
+  }
+
+  /* Print the room totals prominently */
+  [class*="CardFooter"] {
+    border-top: 1px solid #cccccc !important;
+    padding-top: 0.5rem;
+  }
+
+  /* Page break utilities */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  /* Avoid breaking inside cards */
+  .space-y-6 > * {
+    page-break-inside: avoid;
+  }
+}

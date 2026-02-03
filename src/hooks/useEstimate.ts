@@ -1,16 +1,23 @@
-import { useState, useCallback, useMemo } from 'react';
-import type { RoomInput, InteriorJobInput, EstimateResult } from '../types/estimate';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import type {
+  RoomInput,
+  InteriorJobInput,
+  EstimateResult,
+} from '../types/estimate';
 import { createRoom, DEFAULT_ESTIMATE_STATE } from '../types/estimate';
 import {
   calculateRoom,
   calculateInteriorEstimate,
 } from '../lib/calculations/interior';
+import { useLocalStorage } from './useLocalStorage';
 
 interface UseEstimateReturn {
   // State
   job: InteriorJobInput;
   estimate: EstimateResult;
   roomTotals: Map<string, number>;
+  lastSaved: number | null;
+  hasPendingDraft: boolean;
 
   // Room actions
   addRoom: (name?: string) => void;
@@ -22,10 +29,42 @@ interface UseEstimateReturn {
   // Job-level actions
   setAdditionalColors: (count: number) => void;
   reset: () => void;
+
+  // Draft actions
+  loadFromDraft: () => void;
+  dismissDraft: () => void;
+}
+
+// Check for existing draft (runs once before component mounts)
+function checkForExistingDraft(key: string): boolean {
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      const draft = JSON.parse(stored);
+      return draft?.data?.rooms?.length > 0;
+    }
+  } catch {
+    // Ignore errors
+  }
+  return false;
 }
 
 export function useEstimate(): UseEstimateReturn {
   const [job, setJob] = useState<InteriorJobInput>(DEFAULT_ESTIMATE_STATE);
+  // Use lazy initial state to check for draft synchronously
+  const [hasPendingDraft, setHasPendingDraft] = useState(() =>
+    checkForExistingDraft('estimation-calc-draft')
+  );
+
+  const { loadDraft, saveDraft, clearDraft, lastSaved } =
+    useLocalStorage<InteriorJobInput>('estimation-calc-draft');
+
+  // Auto-save whenever job changes (skip if there's a pending draft to recover)
+  useEffect(() => {
+    if (!hasPendingDraft) {
+      saveDraft(job);
+    }
+  }, [job, hasPendingDraft, saveDraft]);
 
   // Calculate estimate whenever job changes
   const estimate = useMemo(() => calculateInteriorEstimate(job), [job]);
@@ -101,18 +140,34 @@ export function useEstimate(): UseEstimateReturn {
   const setAdditionalColors = useCallback((count: number) => {
     setJob((prev) => ({
       ...prev,
-      additionalColors: Math.max(0, count),
+      numWallColors: Math.max(1, count),
     }));
   }, []);
 
   const reset = useCallback(() => {
     setJob(DEFAULT_ESTIMATE_STATE);
-  }, []);
+    clearDraft();
+  }, [clearDraft]);
+
+  const loadFromDraft = useCallback(() => {
+    const draft = loadDraft();
+    if (draft) {
+      setJob(draft.data);
+    }
+    setHasPendingDraft(false);
+  }, [loadDraft]);
+
+  const dismissDraft = useCallback(() => {
+    clearDraft();
+    setHasPendingDraft(false);
+  }, [clearDraft]);
 
   return {
     job,
     estimate,
     roomTotals,
+    lastSaved,
+    hasPendingDraft,
     addRoom,
     updateRoom,
     duplicateRoom,
@@ -120,5 +175,7 @@ export function useEstimate(): UseEstimateReturn {
     renameRoom,
     setAdditionalColors,
     reset,
+    loadFromDraft,
+    dismissDraft,
   };
 }

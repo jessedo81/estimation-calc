@@ -1,5 +1,6 @@
+import { useState, useCallback } from 'react';
 import { Button } from '@tarva/ui';
-import { FileDown, RotateCcw } from 'lucide-react';
+import { FileDown, RotateCcw, Check, Copy } from 'lucide-react';
 
 interface EstimateSummaryFooterProps {
   subtotal: number;
@@ -9,6 +10,22 @@ interface EstimateSummaryFooterProps {
   onReset: () => void;
   onExport?: () => void;
   isExporting?: boolean;
+  lastSaved?: number | null;
+  onCopy?: () => string;
+}
+
+function formatSavedTime(timestamp: number): string {
+  const now = Date.now();
+  const diff = now - timestamp;
+
+  if (diff < 5000) return 'just now';
+  if (diff < 60000) return `${Math.floor(diff / 1000)}s ago`;
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+
+  return new Date(timestamp).toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit'
+  });
 }
 
 export function EstimateSummaryFooter({
@@ -19,7 +36,24 @@ export function EstimateSummaryFooter({
   onReset,
   onExport,
   isExporting,
+  lastSaved,
+  onCopy,
 }: EstimateSummaryFooterProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    if (!onCopy) return;
+
+    const text = onCopy();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+    }
+  }, [onCopy]);
+
   return (
     <footer className="sticky bottom-0 z-10 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-4">
@@ -61,6 +95,13 @@ export function EstimateSummaryFooter({
                 ${jobTotal.toLocaleString()}
               </p>
             </div>
+
+            {lastSaved && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Check className="h-3 w-3 text-success" />
+                <span>Saved {formatSavedTime(lastSaved)}</span>
+              </div>
+            )}
           </div>
 
           {/* Actions */}
@@ -74,6 +115,27 @@ export function EstimateSummaryFooter({
               <RotateCcw className="mr-2 h-4 w-4" />
               Reset
             </Button>
+
+            {onCopy && (
+              <Button
+                variant="outline"
+                onClick={handleCopy}
+                disabled={roomCount === 0}
+                className="inline-flex items-center"
+              >
+                {copied ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4 text-success" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy
+                  </>
+                )}
+              </Button>
+            )}
 
             {onExport && (
               <Button

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   Checkbox,
 } from '@tarva/ui';
-import { MoreHorizontal, Copy, Edit, Trash } from 'lucide-react';
+import { MoreHorizontal, Copy, Edit, Trash, AlertCircle } from 'lucide-react';
 import { NumberStepper } from './NumberStepper';
 import type { RoomInput } from '../../types/estimate';
 import { RoomType, TrimMode, WindowSize } from '../../types/estimate';
@@ -71,6 +71,19 @@ export function RoomCard({
     ? (roomType?.multiplier || RATES.WALL_MULT.GENERAL) + RATES.VAULTED_ADD
     : roomType?.multiplier || RATES.WALL_MULT.GENERAL;
 
+  // Validation checks
+  const hasZeroSqft = room.floorSqft === 0;
+  const needsBaseboardLF =
+    room.trimMode === TrimMode.BASEBOARDS_LF && room.baseboardLF === 0;
+  const hasPaintableItems =
+    room.paintWalls ||
+    room.paintCeiling ||
+    room.doorSides > 0 ||
+    room.closetsStandard > 0 ||
+    room.closetsWalkIn > 0 ||
+    room.windows.length > 0 ||
+    room.trimMode !== TrimMode.NONE;
+
   return (
     <Card className="px-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -79,6 +92,11 @@ export function RoomCard({
             Room {index + 1}: {room.name}
           </CardTitle>
           <Badge variant="secondary">{effectiveMultiplier.toFixed(1)}x</Badge>
+          {!hasPaintableItems && (
+            <Badge variant="outline" className="text-warning border-warning">
+              No items selected
+            </Badge>
+          )}
         </div>
 
         <DropdownMenu>
@@ -152,9 +170,20 @@ export function RoomCard({
               }
               min={0}
               max={10000}
-              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className={`flex h-11 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                hasZeroSqft && room.paintWalls
+                  ? 'border-warning'
+                  : 'border-input'
+              }`}
             />
-            <p className="text-xs text-muted-foreground">Floor area</p>
+            {hasZeroSqft && room.paintWalls ? (
+              <p className="text-xs text-warning flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                Enter sq.ft for wall cost calculation
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">Floor area</p>
+            )}
           </div>
         </div>
 
@@ -237,13 +266,22 @@ export function RoomCard({
                   }
                   min={0}
                   placeholder="Linear feet"
-                  className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  className={`flex h-11 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                    needsBaseboardLF ? 'border-warning' : 'border-input'
+                  }`}
                 />
-                <p className="text-xs text-muted-foreground">
-                  {room.paintWalls
-                    ? `$${RATES.BASEBOARD_LF_WITH_WALLS}/LF with walls`
-                    : `$${RATES.BASEBOARD_LF_ONLY}/LF (baseboards only)`}
-                </p>
+                {needsBaseboardLF ? (
+                  <p className="text-xs text-warning flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    Enter linear feet for baseboard cost
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    {room.paintWalls
+                      ? `$${RATES.BASEBOARD_LF_WITH_WALLS}/LF with walls`
+                      : `$${RATES.BASEBOARD_LF_ONLY}/LF (baseboards only)`}
+                  </p>
+                )}
               </div>
             )}
           </div>

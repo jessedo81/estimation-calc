@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@tarva/ui';
 import { Plus } from 'lucide-react';
 import { useEstimate } from '../hooks/useEstimate';
@@ -8,6 +8,7 @@ import {
   EstimateSummaryFooter,
   ResetConfirmDialog,
   NoRoomsState,
+  DraftRecoveryDialog,
 } from '../components';
 
 export function EstimationPage() {
@@ -15,12 +16,16 @@ export function EstimationPage() {
     job,
     estimate,
     roomTotals,
+    lastSaved,
+    hasPendingDraft,
     addRoom,
     updateRoom,
     duplicateRoom,
     removeRoom,
     renameRoom,
     reset,
+    loadFromDraft,
+    dismissDraft,
   } = useEstimate();
 
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
@@ -57,6 +62,32 @@ export function EstimationPage() {
   const handleRename = (newName: string) => {
     renameRoom(renameDialogState.roomId, newName);
   };
+
+  const generateCopyText = useCallback(() => {
+    const lines: string[] = [
+      'INTERIOR PAINTING ESTIMATE',
+      '=' .repeat(30),
+      '',
+    ];
+
+    job.rooms.forEach((room, index) => {
+      const total = roomTotals.get(room.id) || 0;
+      lines.push(`Room ${index + 1}: ${room.name}`);
+      lines.push(`  ${room.floorSqft} sq.ft • $${total.toLocaleString()}`);
+    });
+
+    lines.push('');
+    lines.push('-'.repeat(30));
+    lines.push(`Subtotal: $${estimate.subtotal.toLocaleString()}`);
+    if (estimate.setupFee > 0) {
+      lines.push(`Setup Fee: $${estimate.setupFee.toLocaleString()}`);
+    }
+    lines.push(`TOTAL: $${estimate.total.toLocaleString()}`);
+    lines.push('');
+    lines.push(`Generated ${new Date().toLocaleDateString()}`);
+
+    return lines.join('\n');
+  }, [job.rooms, roomTotals, estimate]);
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -111,13 +142,40 @@ export function EstimationPage() {
         )}
       </main>
 
-      {/* Footer */}
+      {/* Print-only summary (hidden on screen) */}
+      {job.rooms.length > 0 && (
+        <div className="hidden print:block border-t-2 border-black mt-8 pt-4">
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                {job.rooms.length} room{job.rooms.length !== 1 ? 's' : ''}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Generated {new Date().toLocaleDateString()}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm">Subtotal: ${estimate.subtotal.toLocaleString()}</p>
+              {estimate.setupFee > 0 && (
+                <p className="text-sm">Setup Fee: +${estimate.setupFee.toLocaleString()}</p>
+              )}
+              <p className="text-2xl font-bold">
+                Total: ${estimate.total.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer (hidden when printing) */}
       <EstimateSummaryFooter
         subtotal={estimate.subtotal}
         setupFee={estimate.setupFee}
         jobTotal={estimate.total}
         roomCount={job.rooms.length}
         onReset={() => setResetDialogOpen(true)}
+        lastSaved={lastSaved}
+        onCopy={generateCopyText}
       />
 
       {/* Dialogs */}
@@ -136,6 +194,12 @@ export function EstimationPage() {
         currentName={renameDialogState.currentName}
         onRename={handleRename}
         roomIndex={renameDialogState.roomIndex}
+      />
+
+      <DraftRecoveryDialog
+        open={hasPendingDraft}
+        onRecover={loadFromDraft}
+        onDiscard={dismissDraft}
       />
     </div>
   );
