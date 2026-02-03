@@ -234,7 +234,12 @@ export function RoomCard({
 
         {/* Trim Options */}
         <div>
-          <label className="text-sm font-medium mb-3 block">Trim</label>
+          <label
+            htmlFor={`${room.id}-trim`}
+            className="text-sm font-medium mb-3 block"
+          >
+            Trim
+          </label>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <select

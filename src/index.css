@@ -35,7 +35,7 @@
   --accent-foreground: #2b1746;
 
   /* Destructive */
-  --destructive: #cf2e2e;
+  --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
 
   /* Form elements */
@@ -52,7 +52,7 @@
 
   /* Status colors */
   --status-success: #22c55e;
-  --status-warning: #eab308;
+  --status-warning: #b45309; /* Amber-700 for WCAG AA compliance */
   --status-danger: #ef4444;
   --status-info: #3b82f6;
 
@@ -97,7 +97,7 @@
   --accent-foreground: #fafafa;
 
   /* Destructive */
-  --destructive: #cf2e2e;
+  --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
 
   /* Form elements */
