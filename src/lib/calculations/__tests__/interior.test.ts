@@ -19,14 +19,7 @@ import {
   calculateInteriorEstimate,
   calculateJobTotal,
 } from '../interior';
-import { RATES } from '../../calc/rates';
-import {
-  RoomType,
-  TrimMode,
-  WindowSize,
-  RoomInput,
-  createRoom,
-} from '../../../types/estimate';
+import { RoomType, TrimMode, WindowSize, createRoom } from '../../../types/estimate';
 
 // ============================================================
 // UTILITY FUNCTIONS

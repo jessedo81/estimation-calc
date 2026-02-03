@@ -5,56 +5,61 @@
  */
 
 // ============================================================
-// ENUMS
+// ENUMS (as const objects for erasableSyntaxOnly compatibility)
 // ============================================================
 
 /**
  * Room type determines the wall multiplier
  * painting-algo.md L21-23
  */
-export enum RoomType {
-  GENERAL = 'general', // 2.8x - bedrooms, living rooms, offices
-  KITCHEN = 'kitchen', // 3.1x - more cut-in, cabinets, prep
-  BATHROOM = 'bathroom', // 4.1x - tight spaces, fixtures, moisture prep
-}
+export const RoomType = {
+  GENERAL: 'general', // 2.8x - bedrooms, living rooms, offices
+  KITCHEN: 'kitchen', // 3.1x - more cut-in, cabinets, prep
+  BATHROOM: 'bathroom', // 4.1x - tight spaces, fixtures, moisture prep
+} as const;
+export type RoomType = (typeof RoomType)[keyof typeof RoomType];
 
 /**
  * Trim mode determines how trim pricing is calculated
  * painting-algo.md L36-45
  */
-export enum TrimMode {
-  NONE = 'none', // No trim
-  TRIM_PACKAGE_SF = 'trim_package_sf', // SF x 0.5
-  BASEBOARDS_LF = 'baseboards_lf', // LF x rate (depends on walls)
-}
+export const TrimMode = {
+  NONE: 'none', // No trim
+  TRIM_PACKAGE_SF: 'trim_package_sf', // SF x 0.5
+  BASEBOARDS_LF: 'baseboards_lf', // LF x rate (depends on walls)
+} as const;
+export type TrimMode = (typeof TrimMode)[keyof typeof TrimMode];
 
 /**
  * Window size factor for pricing
  * painting-algo.md L67
  */
-export enum WindowSize {
-  STANDARD = 1, // Base price ($70)
-  LARGE = 2, // Double base ($140)
-}
+export const WindowSize = {
+  STANDARD: 1, // Base price ($70)
+  LARGE: 2, // Double base ($140)
+} as const;
+export type WindowSize = (typeof WindowSize)[keyof typeof WindowSize];
 
 /**
  * Line item categories for breakdown display
  */
-export enum LineItemCategory {
-  WALLS = 'walls',
-  CEILING = 'ceiling',
-  TRIM = 'trim',
-  DOORS = 'doors',
-  CLOSETS = 'closets',
-  WINDOWS = 'windows',
-  ACCENT_WALLS = 'accent_walls',
-  CROWN_MOLDING = 'crown_molding',
-  SCAFFOLDING = 'scaffolding',
-  ADDITIONAL_COLORS = 'additional_colors',
-  WALLPAPER_REMOVAL = 'wallpaper_removal',
-  PAINT_OPTIONS = 'paint_options',
-  SETUP_FEE = 'setup_fee',
-}
+export const LineItemCategory = {
+  WALLS: 'walls',
+  CEILING: 'ceiling',
+  TRIM: 'trim',
+  DOORS: 'doors',
+  CLOSETS: 'closets',
+  WINDOWS: 'windows',
+  ACCENT_WALLS: 'accent_walls',
+  CROWN_MOLDING: 'crown_molding',
+  SCAFFOLDING: 'scaffolding',
+  ADDITIONAL_COLORS: 'additional_colors',
+  WALLPAPER_REMOVAL: 'wallpaper_removal',
+  PAINT_OPTIONS: 'paint_options',
+  SETUP_FEE: 'setup_fee',
+} as const;
+export type LineItemCategory =
+  (typeof LineItemCategory)[keyof typeof LineItemCategory];
 
 // ============================================================
 // INPUT TYPES
@@ -189,7 +194,7 @@ export interface EstimateResult {
   setupFee: number;
   total: number;
   roomCount: number;
-  warnings: string[]; // Any validation warnings
+  warnings: string[];
 }
 
 // ============================================================
@@ -249,11 +254,9 @@ export interface EstimateState {
 /**
  * Default estimate state
  */
-export const DEFAULT_ESTIMATE_STATE: EstimateState = {
+export const DEFAULT_ESTIMATE_STATE: InteriorJobInput = {
   rooms: [],
   numWallColors: 1,
   customerSuppliesPaint: false,
   premiumPaint: false,
-  jobName: '',
-  estimatorName: '',
 };

@@ -6,13 +6,11 @@
  */
 
 import { RATES } from '../calc/rates';
-import {
-  RoomType,
-  TrimMode,
+import { RoomType, TrimMode, LineItemCategory } from '../../types/estimate';
+import type {
   RoomInput,
   InteriorJobInput,
   LineItem,
-  LineItemCategory,
   RoomResult,
   EstimateResult,
   WallCalculationResult,
