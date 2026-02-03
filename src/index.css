@@ -1,21 +1,58 @@
 @import "tailwindcss";
 @import "@tarva/ui/styles.css";
 
-/* Custom theme extensions */
+/* Bridge @tarva/ui CSS variables to Tailwind 4 @theme */
 @theme {
+  /* Semantic colors from @tarva/ui */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Status colors */
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-danger: var(--status-danger);
+  --color-info: var(--status-info);
+
   /* Brand colors for On-Demand Painters */
   --color-odp-primary: #3b82f6;
   --color-odp-bg: #0b0f14;
   --color-odp-surface: #1a1f2e;
+
+  /* Border radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 /* Base styles */
 body {
-  @apply bg-background text-foreground antialiased;
+  background-color: var(--background);
+  color: var(--foreground);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Focus visible for accessibility */
 :focus-visible {
-  @apply outline-2 outline-offset-2 outline-ring;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
