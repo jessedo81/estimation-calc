@@ -84,24 +84,48 @@ export const RATES = {
   PREMIUM_PAINT_UPCHARGE: 200, // Premium paint upgrade: $200 flat
 
   // ============================================================
-  // EXTERIOR (for future phases, painting-algo.md exterior section)
+  // EXTERIOR (painting-algo.md L184-231)
+  // Formula: ((Height_Mult + Difficulty_Adj + Flaking_Adj) x SF + $1,750) x 1.6
   // ============================================================
   EXTERIOR: {
-    BASE_FEE: 500, // Base setup for exterior
+    // Height multipliers (painting-algo.md L186-189, L461)
     HEIGHT_MULT: {
-      SINGLE_STORY: 1.0,
-      TWO_STORY: 1.25,
-      THREE_STORY: 1.5,
+      ONE_STORY: 1.25, // Single level, ground work
+      ONE_HALF_STORY: 1.5, // Split level with peaks
+      TWO_STORY: 1.75, // Standard two-story
+      THREE_STORY: 2.25, // Three-story, ladder/lift work
     },
-    DIFFICULTY_MULT: {
-      EASY: 1.0,
-      MODERATE: 1.15,
-      DIFFICULT: 1.35,
+
+    // Difficulty adjustments per side (painting-algo.md L191-193, L467-468)
+    DIFFICULTY: {
+      NON_FLAT_GROUND: 0.25, // Per side with non-flat ground
+      ROOF_ACCESS: 0.25, // Per side requiring roof access
     },
-    COAT_MULT: {
-      ONE_COAT: 0.65,
-      TWO_COAT: 1.0,
+
+    // Flaking adjustments (painting-algo.md L199-207, L469-472)
+    FLAKING: {
+      LIGHT: 0.0, // ~5-8 SF prep included
+      MEDIUM: 0.3, // Moderate scraping/sanding
+      HEAVY_MIN: 0.5, // Extensive prep minimum
+      HEAVY_MAX: 1.0, // Extensive prep maximum
     },
+
+    // Base fee (painting-algo.md L197)
+    BASE_FEE: 1750,
+
+    // Two-coat multiplier (painting-algo.md L198)
+    COAT_MULTIPLIER: 1.6,
+
+    // Add-ons (painting-algo.md L211-217, L483-488)
+    ADD_ONS: {
+      SHUTTER: 75, // Per shutter
+      FRONT_DOOR: 250, // 3 coats, high gloss
+      GARAGE_1_CAR: 200, // Standard single
+      GARAGE_2_CAR: 400, // Standard double
+    },
+
+    // Partial job multiplier (painting-algo.md L227)
+    PARTIAL_JOB_MULTIPLIER: 0.6, // Trim only or siding only
   },
 } as const;
 
@@ -113,5 +137,6 @@ Object.freeze(RATES);
 Object.freeze(RATES.WALL_MULT);
 Object.freeze(RATES.EXTERIOR);
 Object.freeze(RATES.EXTERIOR.HEIGHT_MULT);
-Object.freeze(RATES.EXTERIOR.DIFFICULTY_MULT);
-Object.freeze(RATES.EXTERIOR.COAT_MULT);
+Object.freeze(RATES.EXTERIOR.DIFFICULTY);
+Object.freeze(RATES.EXTERIOR.FLAKING);
+Object.freeze(RATES.EXTERIOR.ADD_ONS);

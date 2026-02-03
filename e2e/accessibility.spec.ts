@@ -14,7 +14,7 @@ const DISABLED_RULES = [
 
 test.describe('Accessibility', () => {
   test('empty state has no accessibility violations', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
 
@@ -26,7 +26,7 @@ test.describe('Accessibility', () => {
   });
 
   test('estimation page with rooms has no critical accessibility violations', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
 
@@ -62,7 +62,7 @@ test.describe('Accessibility', () => {
   });
 
   test('dialog has no critical accessibility violations', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
 

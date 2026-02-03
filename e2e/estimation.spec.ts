@@ -3,25 +3,25 @@ import { test, expect } from '@playwright/test';
 test.describe('Interior Estimation', () => {
   test.beforeEach(async ({ page }) => {
     // Clear localStorage before each test
-    await page.goto('/');
+    await page.goto('/interior');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
   });
 
   test('shows empty state when no rooms exist', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await expect(page.getByText('No rooms added yet')).toBeVisible();
     await expect(page.getByRole('button', { name: /add.*room/i })).toBeVisible();
   });
 
   test('can add a room', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
     await expect(page.getByText('Room 1')).toBeVisible();
   });
 
   test('calculates room total correctly', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Enter 200 sqft
@@ -33,7 +33,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('applies kitchen multiplier (3.1x)', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Select kitchen type
@@ -49,7 +49,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('applies bathroom multiplier (4.1x)', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Select bathroom type
@@ -65,7 +65,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('applies room minimum ($275)', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Enter very small room (50 sqft)
@@ -77,7 +77,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('can duplicate a room', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Open room actions menu - look for the menu trigger button
@@ -90,7 +90,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('can remove a room', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Open room actions menu and remove
@@ -102,7 +102,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('reset clears all rooms with confirmation', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
 
     // Add a room
     await page.getByRole('button', { name: /add.*room/i }).click();
@@ -128,7 +128,7 @@ test.describe('Interior Estimation', () => {
     // Grant clipboard permissions
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
 
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Click copy button
@@ -139,7 +139,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('shows setup fee for jobs under minimum', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Enter small room - 100 sqft at 2.8x = $280, which is under $1,566 minimum
@@ -151,7 +151,7 @@ test.describe('Interior Estimation', () => {
   });
 
   test('persists data to localStorage', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Enter sqft
@@ -171,7 +171,7 @@ test.describe('Interior Estimation', () => {
 
 test.describe('Accessibility', () => {
   test('all interactive elements are keyboard accessible', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
 
     // Tab through the page
     await page.keyboard.press('Tab');
@@ -182,7 +182,7 @@ test.describe('Accessibility', () => {
   });
 
   test('form inputs have associated labels', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/interior');
     await page.getByRole('button', { name: /add.*room/i }).click();
 
     // Check that inputs have labels

@@ -1,5 +1,5 @@
 // Form components
-export { NumberStepper, RoomCard, RenameDialog } from './forms';
+export { NumberStepper, RoomCard, RenameDialog, ExteriorForm } from './forms';
 
 // Display components
 export {

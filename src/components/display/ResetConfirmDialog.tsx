@@ -14,6 +14,7 @@ interface ResetConfirmDialogProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   roomCount: number;
+  message?: string;
 }
 
 export function ResetConfirmDialog({
@@ -21,16 +22,20 @@ export function ResetConfirmDialog({
   onOpenChange,
   onConfirm,
   roomCount,
+  message,
 }: ResetConfirmDialogProps) {
+  const defaultMessage =
+    roomCount > 0
+      ? `This will remove all ${roomCount} room${roomCount !== 1 ? 's' : ''} and reset the estimate to its initial state. This action cannot be undone.`
+      : 'This will reset the estimate to its initial state. This action cannot be undone.';
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Reset Estimate?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will remove all {roomCount} room{roomCount !== 1 ? 's' : ''} and
-            reset the estimate to its initial state. This action cannot be
-            undone.
+            {message ?? defaultMessage}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
