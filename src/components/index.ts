@@ -7,4 +7,5 @@ export {
   ResetConfirmDialog,
   BreakdownTable,
   NoRoomsState,
+  DraftRecoveryDialog,
 } from './display';
