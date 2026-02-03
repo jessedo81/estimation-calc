@@ -1,48 +1,31 @@
 /**
  * Pricing constants for EstimationCalc
- * Based on On-Demand Painters pricing standards
+ * Re-exports from rates.ts for backwards compatibility
  */
 
-// Square footage multipliers by room type
+export { RATES, type RateKey } from './rates';
+
+// Legacy exports for backwards compatibility
+// These map to the new RATES structure
+import { RATES } from './rates';
+
+/** @deprecated Use RATES.WALL_MULT instead */
 export const ROOM_TYPE_MULTIPLIERS: Record<string, number> = {
-  standard: 2.8,
-  kitchen: 3.1,
-  bathroom: 4.1,
-  laundry: 2.8,
+  standard: RATES.WALL_MULT.GENERAL,
+  general: RATES.WALL_MULT.GENERAL,
+  kitchen: RATES.WALL_MULT.KITCHEN,
+  bathroom: RATES.WALL_MULT.BATHROOM,
+  laundry: RATES.WALL_MULT.GENERAL,
   garage: 2.5,
-  hallway: 2.8,
+  hallway: RATES.WALL_MULT.GENERAL,
   stairwell: 3.5,
 };
 
-// Ceiling pricing per square foot
-export const CEILING_PRICE_PER_SQFT = 1.15;
+/** @deprecated Use RATES.MIN_ROOM_CHARGE instead */
+export const MINIMUM_ROOM_CHARGE = RATES.MIN_ROOM_CHARGE;
 
-// Baseboard/trim pricing per linear foot
-export const BASEBOARD_PRICE_PER_LF = 1.25;
+/** @deprecated Use RATES.SETUP_THRESHOLD instead */
+export const MINIMUM_JOB_FEE = RATES.SETUP_THRESHOLD;
 
-// Door pricing
-export const DOOR_PRICES = {
-  standard: 65,
-  double: 110,
-  sliding: 95,
-  closet: 45,
-};
-
-// Window pricing
-export const WINDOW_PRICES = {
-  small: 25, // <12 sqft
-  medium: 40, // 12-24 sqft
-  large: 60, // >24 sqft
-};
-
-// Minimum job fee
-export const MINIMUM_JOB_FEE = 1566;
-
-// Setup and cleanup fee
-export const SETUP_CLEANUP_FEE = 300;
-
-// Default wall height in feet
-export const DEFAULT_WALL_HEIGHT = 9;
-
-// Default coat count
-export const DEFAULT_COAT_COUNT = 2;
+/** @deprecated Use RATES.SETUP_MAX_FEE instead */
+export const SETUP_CLEANUP_FEE = RATES.SETUP_MAX_FEE;
