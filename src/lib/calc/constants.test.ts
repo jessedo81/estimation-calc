@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  ROOM_TYPE_MULTIPLIERS,
-  MINIMUM_JOB_FEE,
-  SETUP_CLEANUP_FEE,
-} from './constants';
+import { ROOM_TYPE_MULTIPLIERS, MINIMUM_JOB_FEE, SETUP_CLEANUP_FEE } from './constants';
 
 describe('Pricing Constants', () => {
   it('should have correct room type multipliers', () => {
