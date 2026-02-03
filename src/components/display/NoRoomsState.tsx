@@ -19,7 +19,7 @@ export function NoRoomsState({ onAddRoom }: NoRoomsStateProps) {
         bathrooms, kitchens, and more.
       </p>
 
-      <Button onClick={onAddRoom} size="lg">
+      <Button onClick={onAddRoom} size="lg" className="inline-flex items-center">
         <Plus className="mr-2 h-5 w-5" />
         Add First Room
       </Button>

@@ -66,6 +66,9 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@types': path.resolve(__dirname, './src/types'),
+      // Fix duplicate React issue with npm link
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
     },
   },
 });

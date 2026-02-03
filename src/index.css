@@ -1,43 +1,54 @@
 @import 'tailwindcss';
 
-/*
- * Design tokens from @tarva/ui
- * These are inlined for CI compatibility when @tarva/ui is not available.
- * In development, @tarva/ui is linked locally via npm link.
- */
-:root {
-  /* Core semantic colors - Light Mode */
-  --background: #e8f8ff;
-  --foreground: #070e16;
-  --card: #d9effb;
-  --card-foreground: #070e16;
-  --popover: #eafaff;
-  --popover-foreground: #070e16;
+/* Tell Tailwind 4 to scan @tarva/ui components for classes */
+@source "../node_modules/@tarva/ui/dist/**/*.js";
+@source "../node_modules/@tarva/ui/src/**/*.tsx";
 
-  /* Primary: Orange */
-  --primary: #fd5b0b;
-  --primary-foreground: #fefcf4;
+/*
+ * Design tokens - On-Demand Painting theme
+ * Purple primary color scheme from @tarva/ui
+ */
+:root,
+[data-color-scheme='on-demand-painting'] {
+  /* Core semantic colors - Light Mode */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+
+  /* Primary: Purple */
+  --primary: #6b3da7;
+  --primary-foreground: #ffffff;
 
   /* Secondary */
-  --secondary: #d4f3fc;
-  --secondary-foreground: #52727c;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
 
   /* Muted */
-  --muted: #d5e4ec;
-  --muted-foreground: #6e848f;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
 
-  /* Accent: Teal */
-  --accent: #6099ab;
-  --accent-foreground: #030d12;
+  /* Accent: Light Purple */
+  --accent: #f6f1ff;
+  --accent-foreground: #2b1746;
 
   /* Destructive */
-  --destructive: #ea1f2f;
-  --destructive-foreground: #fefcf4;
+  --destructive: #cf2e2e;
+  --destructive-foreground: #ffffff;
 
   /* Form elements */
-  --border: #d5e0e6;
-  --input: #d8e7f0;
-  --ring: #ed835e;
+  --border: #e6ddf3;
+  --input: #e6ddf3;
+  --ring: #9b51e0;
+
+  /* Chart colors */
+  --chart-1: #8ed1fc;
+  --chart-2: #0693e3;
+  --chart-3: #9b51e0;
+  --chart-4: #00d084;
+  --chart-5: #fcb900;
 
   /* Status colors */
   --status-success: #22c55e;
@@ -45,43 +56,71 @@
   --status-danger: #ef4444;
   --status-info: #3b82f6;
 
+  /* Sidebar */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #6b3da7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f6f1ff;
+  --sidebar-accent-foreground: #2b1746;
+  --sidebar-border: #e6ddf3;
+  --sidebar-ring: #9b51e0;
+
   /* Base radius */
   --radius: 0.625rem;
 }
 
-.dark {
+.dark,
+[data-color-scheme='on-demand-painting'].dark {
   /* Core semantic colors - Dark Mode */
-  --background: #050911;
-  --foreground: #def6ff;
-  --card: #0f161f;
-  --card-foreground: #def6ff;
-  --popover: #0a1118;
-  --popover-foreground: #def6ff;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #262626;
+  --popover-foreground: #fafafa;
 
-  /* Primary: Orange */
-  --primary: #fd5b0b;
-  --primary-foreground: #fefcf4;
+  /* Primary: Purple */
+  --primary: #9b51e0;
+  --primary-foreground: #ffffff;
 
   /* Secondary */
-  --secondary: #1a2a33;
-  --secondary-foreground: #b0c4cd;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
 
   /* Muted */
-  --muted: #1a2631;
-  --muted-foreground: #8ca3af;
+  --muted: #262626;
+  --muted-foreground: #a1a1a1;
 
-  /* Accent: Teal */
-  --accent: #17545e;
-  --accent-foreground: #def6ff;
+  /* Accent: Dark Purple */
+  --accent: #2b1d3a;
+  --accent-foreground: #fafafa;
 
   /* Destructive */
-  --destructive: #ea1f2f;
-  --destructive-foreground: #fefcf4;
+  --destructive: #cf2e2e;
+  --destructive-foreground: #ffffff;
 
   /* Form elements */
-  --border: #1f3340;
-  --input: #1a2a33;
-  --ring: #ed835e;
+  --border: #2f243a;
+  --input: #3a2a4a;
+  --ring: #9b51e0;
+
+  /* Chart colors */
+  --chart-1: #8ed1fc;
+  --chart-2: #0693e3;
+  --chart-3: #9b51e0;
+  --chart-4: #00d084;
+  --chart-5: #fcb900;
+
+  /* Sidebar - Dark mode */
+  --sidebar: #171717;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #9b51e0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2b1d3a;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #2f243a;
+  --sidebar-ring: #9b51e0;
 }
 
 /* Bridge CSS variables to Tailwind 4 @theme */
@@ -113,10 +152,15 @@
   --color-danger: var(--status-danger);
   --color-info: var(--status-info);
 
-  /* Brand colors for On-Demand Painters */
-  --color-odp-primary: #3b82f6;
-  --color-odp-bg: #0b0f14;
-  --color-odp-surface: #1a1f2e;
+  /* Sidebar colors */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   /* Border radius */
   --radius-sm: calc(var(--radius) - 4px);

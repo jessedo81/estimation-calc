@@ -72,7 +72,7 @@ export function RoomCard({
     : roomType?.multiplier || RATES.WALL_MULT.GENERAL;
 
   return (
-    <Card>
+    <Card className="px-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
           <CardTitle className="text-lg">

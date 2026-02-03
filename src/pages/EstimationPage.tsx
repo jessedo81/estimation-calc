@@ -72,7 +72,7 @@ export function EstimationPage() {
             </div>
 
             {job.rooms.length > 0 && (
-              <Button onClick={() => addRoom()}>
+              <Button onClick={() => addRoom()} className="inline-flex items-center">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Room
               </Button>
@@ -102,7 +102,7 @@ export function EstimationPage() {
 
             {/* Add another room button at bottom */}
             <div className="flex justify-center pt-4">
-              <Button variant="outline" size="lg" onClick={() => addRoom()}>
+              <Button size="lg" onClick={() => addRoom()} className="inline-flex items-center">
                 <Plus className="mr-2 h-5 w-5" />
                 Add Another Room
               </Button>

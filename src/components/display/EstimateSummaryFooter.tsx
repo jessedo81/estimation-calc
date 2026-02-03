@@ -66,9 +66,10 @@ export function EstimateSummaryFooter({
           {/* Actions */}
           <div className="flex gap-2">
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={onReset}
               disabled={roomCount === 0}
+              className="inline-flex items-center"
             >
               <RotateCcw className="mr-2 h-4 w-4" />
               Reset
@@ -78,6 +79,7 @@ export function EstimateSummaryFooter({
               <Button
                 onClick={onExport}
                 disabled={roomCount === 0 || isExporting}
+                className="inline-flex items-center"
               >
                 <FileDown className="mr-2 h-4 w-4" />
                 {isExporting ? 'Exporting...' : 'Export PDF'}
